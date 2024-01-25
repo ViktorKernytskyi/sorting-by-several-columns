@@ -5,18 +5,58 @@ require_once('data.php');
 
 
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1') . '<br>';
+// Перевірка, чи є параметр сортування в URL
+//$sorts = getSortParams();
 
 
+//// Функція для порівняння за кількома стовпцями
+//function multiSort($a, $b) {
+//    $cityComparison = strcmp($a['city'], $b['city']);
+//
+//    if ($cityComparison === 0) {
+//        $nameComparison = strcmp($a['name'], $b['name']);
+//
+//        if ($nameComparison === 0) {
+//            $countryComparison = strcmp($a['country'], $b['country']);
+//
+//            if ($countryComparison === 0) {
+//                return ($a['price'] < $b['price']) ? -1 : 1;
+//            }
+//
+//            return $countryComparison;
+//        }
+//
+//        return $nameComparison;
+//    }
+//
+//    return $cityComparison;
+//}
 
-$sortColumn = isset($_GET['sort']) ? key($_GET['sort']) : 'city';
-$sortOrder = isset($_GET['sort'][$sortColumn]) && $_GET['sort'][$sortColumn] === 'asc' ? 'asc' : 'desc';
+
+// Перевірка, чи є параметр сортування в URL
+$sorts = getSortParams();
+var_dump($_GET);
+//var_dump($arr);
 
 
-// Сортування за вказаним порядком
-usort($arr, 'multiLevelSort');
+//var_dump($sorts);
 
+// Виведення таблиці
+//echoTable($arr, $sorts);
+
+// Функція для виведення таблиці
+function echoTable($arr, $sorts)
+{
+    usort($arr, function ($a, $b) use ($sorts) {
+        foreach ($sorts as $col => $order) {
+            $result = strnatcasecmp($a[$col], $b[$col]);
+            if ($result !== 0) {
+                return ($order === 'asc') ? $result : -$result;
+            }
+        }
+        return 0;
+    });
+}
 
 
 // Підключення файлу table.php для відображення таблиці

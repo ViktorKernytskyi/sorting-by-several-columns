@@ -1,32 +1,63 @@
 <?php
 require_once('data.php');
 
-// Функція для створення URL з параметрами сортування
-function buildSortUrl($column) {
-    $order = isset($_GET['sort'][$column]) && $_GET['sort'][$column] === 'asc' ? 'desc' : 'asc';
-    return http_build_query(['sort' => [$column => $order]]);
-}
+/// Функція для отримання параметрів сортування з URL
+function getSortParams() {
+    $sorts = [];
 
-require_once('functions.php');
+    if (isset($_GET['sort'])) {
+        $sortString = $_GET['sort'];
+        $sortParams = explode(',', $sortString);
 
-if (!isset($arr)) {
-    include('data.php');
-}
+        foreach ($sortParams as $param) {
+            list($field, $order) = explode(':', $param);
+            $field = trim($field);
+            $order = trim($order);
 
-// Функція для багаторівневого сортування
-function multiLevelSort($a, $b) {
-    global $sortColumn, $sortOrder;
-
-    $result = strcmp($a[$sortColumn], $b[$sortColumn]) * ($sortOrder === 'asc' ? 1 : -1);
-
-    if ($result === 0) {
-        // Якщо рівні, сортуємо за іншими стовпцями (наприклад, за назвою)
-        $result = strcmp($a['name'], $b['name']);
+            if (!empty($field) && !empty($order)) {
+                $sorts[$field] = $order;
+            }
+        }
     }
 
-    return $result;
+    return $sorts;
 }
 
+// Функція для побудови URL з параметрами сортування
+function buildSortUrl($currentSorts, $column) {
+    $sortUrl = '?sort=';
+
+    foreach ($currentSorts as $field => $order) {
+        if ($field !== $column) {
+            $sortUrl .= $field . ':' . $order . ',';
+        }
+    }
+
+    $newOrder = ($currentSorts[$column] === 'asc' || !$currentSorts[$column]) ? 'desc' : 'asc';
+    $sortUrl .= $column . ':' . $newOrder;
+
+    return rtrim($sortUrl, ',');
+}
+//// Функція для порівняння за кількома стовпцями
+//function multiSort($a, $b, $sorts) {
+//    foreach ($sorts as $col => $order) {
+//        $result = strnatcasecmp($a[$col], $b[$col]); // strnatcasecmp для рядків (без урахування регістру)
+//        if ($result !== 0) {
+//            return ($order === 'asc') ? $result : -$result;
+//        }
+//    }
+//    return 0;
+//}
+//
+// Функція для отримання параметрів сортування з URL
+
+
+
+
+
+
 ?>
+
+
 
 

@@ -27,12 +27,13 @@ if (!isset($arr)) {
     <tr>
         <?php foreach (['city', 'name', 'country', 'price'] as $col) : ?>
             <th>
-                <a href="?<?= buildSortUrl($col) ?>">
+                <a href="?<?= buildSortUrl($sorts, $col) ?>">
                     <?= ucfirst($col) ?>
                 </a>
             </th>
         <?php endforeach; ?>
     </tr>
+
     </thead>
     <tbody>
     <?php foreach ($arr as $item) : ?>
