@@ -5,13 +5,6 @@ if (!isset($arr)) {
     include('data.php');
 }
 
-//$sortColumn = isset($_GET['sort']) ? $_GET['sort'] : 'city';
-//$sortOrder = isset($_GET['order']) ? $_GET['order'] : 'asc';
-//
-//// Сортування за вказаною колонкою та порядком
-//$arr = sortData($arr, $sortColumn, $sortOrder);
-
-
 
 
 ?>

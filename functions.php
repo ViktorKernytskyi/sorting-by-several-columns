@@ -1,56 +1,76 @@
 <?php
 require_once('data.php');
 
-/// Функція для отримання параметрів сортування з URL
-function getSortParams() {
-    $sorts = [];
 
-    if (isset($_GET['sort'])) {
-        $sortString = $_GET['sort'];
-        $sortParams = explode(',', $sortString);
 
-        foreach ($sortParams as $param) {
-            list($field, $order) = explode(':', $param);
-            $field = trim($field);
-            $order = trim($order);
+// Функція для побудови URL для сортування
+function buildSortUrl($currentSorts, $column)
+{
+    $sortOrder = 'asc';
 
-            if (!empty($field) && !empty($order)) {
-                $sorts[$field] = $order;
-            }
+    // Визначаємо напрямок сортування (asc або desc)
+    if (isset($currentSorts[$column]) && $currentSorts[$column] === 'asc') {
+        $sortOrder = 'desc';
+    }
+
+    // Побудова URL з новими параметрами сортування
+    $urlParams = http_build_query(array_merge($_GET, ['sorts' => [$column => $sortOrder]]));
+
+    return htmlentities($urlParams);
+}
+
+// Отримання поточного порядку сортування з параметрів URL
+$sorts = [];
+if (isset($_GET['sorts']) && is_array($_GET['sorts'])) {
+    $sorts = $_GET['sorts'];
+}
+
+// functions.php
+
+function sortArrayByColumns($arr, $sorts) {
+    // Групування за містами і типами продуктів
+    $groupedArray = [];
+    foreach ($arr as $item) {
+        $groupedArray[$item['city']][$item['name']][] = $item;
+    }
+
+    // Сортування для кожної групи
+    foreach ($groupedArray as &$cityGroup) {
+        foreach ($cityGroup as &$productTypeGroup) {
+            usort($productTypeGroup, function ($a, $b) use ($sorts) {
+                foreach ($sorts as $column => $order) {
+                    $result = 0;
+
+                    if ($column === 'price') {
+                        $result = $a['price'] - $b['price'];
+                    } else {
+                        $result = strcmp($a[$column], $b[$column]);
+                    }
+
+                    if ($order === 'desc') {
+                        $result *= -1;
+                    }
+
+                    if ($result !== 0) {
+                        return $result;
+                    }
+                }
+
+                return 0;
+            });
         }
     }
 
-    return $sorts;
-}
-
-// Функція для побудови URL з параметрами сортування
-function buildSortUrl($currentSorts, $column) {
-    $sortUrl = '?sort=';
-
-    foreach ($currentSorts as $field => $order) {
-        if ($field !== $column) {
-            $sortUrl .= $field . ':' . $order . ',';
+    // Збірка та повернення результатів
+    $resultArray = [];
+    foreach ($groupedArray as $cityGroup) {
+        foreach ($cityGroup as $productTypeGroup) {
+            $resultArray = array_merge($resultArray, $productTypeGroup);
         }
     }
 
-    $newOrder = ($currentSorts[$column] === 'asc' || !$currentSorts[$column]) ? 'desc' : 'asc';
-    $sortUrl .= $column . ':' . $newOrder;
-
-    return rtrim($sortUrl, ',');
+    return $resultArray;
 }
-//// Функція для порівняння за кількома стовпцями
-//function multiSort($a, $b, $sorts) {
-//    foreach ($sorts as $col => $order) {
-//        $result = strnatcasecmp($a[$col], $b[$col]); // strnatcasecmp для рядків (без урахування регістру)
-//        if ($result !== 0) {
-//            return ($order === 'asc') ? $result : -$result;
-//        }
-//    }
-//    return 0;
-//}
-//
-// Функція для отримання параметрів сортування з URL
-
 
 
 
