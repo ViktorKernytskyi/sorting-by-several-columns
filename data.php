@@ -16,6 +16,7 @@ $arr = [
     ['city' => 'Kyiv', 'name' => 'Apple', 'country' => 'UA', 'price' => 9],
     ['city' => 'Poltava', 'name' => 'Apple', 'country' => 'UA', 'price' => 44],
     ['city' => 'Odessa', 'name' => 'Peach', 'country' => 'UA', 'price' => 222],
+    ['city' => 'Odessa', 'name' => 'Apple', 'country' => 'UA', 'price' => 33],
     ['city' => 'Odessa', 'name' => 'Peach', 'country' => 'UA', 'price' => 122],
     ['city' => 'Odessa', 'name' => 'Peach', 'country' => 'UA', 'price' => 22],
     ['city' => 'Odessa', 'name' => 'Peach', 'country' => 'UA', 'price' => 12],

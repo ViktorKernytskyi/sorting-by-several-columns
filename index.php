@@ -28,12 +28,12 @@ function multiSort($a, $b) {
         }
         return $city;
     }
+
 // Застосовуємо сортування за кількома стовпцями
 usort($arr, 'multiSort');
 
 // Виводимо результат
 //print_r($arr);
-
 
 //// Витягуємо значення стовпців в окремі масиви
 //$cities = array_column($arr, 'city');
@@ -47,6 +47,7 @@ usort($arr, 'multiSort');
 //print_r($arr);
 
 
+
 // Отримання поточного порядку сортування з параметрів URL
 $sorts = [];
 if (isset($_GET['sorts']) && is_array($_GET['sorts'])) {
@@ -55,6 +56,10 @@ if (isset($_GET['sorts']) && is_array($_GET['sorts'])) {
 
 // Сортування масиву перед виведенням в таблицю
 $arr = sortArrayByColumns($arr, $sorts);
+//echo '<pre>';
+//print_r($arr);
+//echo '</pre>';
+
 
 
 // Підключення файлу table.php для відображення таблиці
