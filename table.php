@@ -7,7 +7,10 @@ if (!isset($arr)) {
 
 
 
+
+
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,13 +23,12 @@ if (!isset($arr)) {
     <tr>
         <?php foreach (['city', 'name', 'country', 'price'] as $col) : ?>
             <th>
-                <a href="?<?= buildSortUrl($sorts, $col) ?>">
+                <a href="?<?= buildSortUrl($currentSorts, $col) ?>">
                     <?= ucfirst($col) ?>
                 </a>
             </th>
         <?php endforeach; ?>
     </tr>
-
     </thead>
     <tbody>
     <?php foreach ($arr as $item) : ?>
@@ -39,12 +41,8 @@ if (!isset($arr)) {
     <?php endforeach; ?>
     </tbody>
 </table>
-
 </body>
 </html>
-
-
-
 
 
 
